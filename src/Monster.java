@@ -3,12 +3,14 @@ public class Monster
     String name;
     int hp;
     int damage;
+    int coinDrop;
 
-    public Monster(String name, int hp, int damage)
+    public Monster(String name, int hp, int damage, int coinDrop)
     {
         this.name = name;
         this.hp = hp;
         this.damage = damage;
+        this.coinDrop = coinDrop;
     }
 
     boolean isAlive()
@@ -18,6 +20,6 @@ public class Monster
 
     void show()
     {
-        System.out.println("Монстр: " + name + " (HP: " + hp + ")");
+        System.out.println("Монстр: " + name + " (HP: " + hp + ", урон: " + damage + ")");
     }
 }

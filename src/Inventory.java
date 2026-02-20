@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Inventory
 {
     ArrayList<Item> items = new ArrayList<>();
-    int maxSize = 10;
+    int maxSize = 15; // увеличим, так как добавились предметы
 
     boolean addItem(Item item)
     {
@@ -58,14 +58,37 @@ public class Inventory
         }
     }
 
-    int getDamageBonus()
+    // Суммарная броня от всех предметов
+    int getTotalArmor()
+    {
+        int total = 0;
+        for (Item item : items)
+        {
+            if (item.type == ItemType.ARMOR)
+            {
+                total += item.bonus;
+            }
+        }
+        return total;
+    }
+
+    // Бонус урона в зависимости от класса и типа оружия
+    int getDamageBonus(ClassType classType)
     {
         int maxBonus = 0;
         for (Item item : items)
         {
-            if (item.type == ItemType.WEAPON && item.bonus > maxBonus)
+            if (item.type == ItemType.WEAPON)
             {
-                maxBonus = item.bonus;
+                // Проверяем соответствие оружия классу
+                boolean canUse = false;
+                if (classType == ClassType.MELEE && item.name.contains("Меч")) canUse = true;
+                if (classType == ClassType.ARCHER && item.name.contains("Лук")) canUse = true;
+                if (classType == ClassType.MAGE && item.name.contains("Книга")) canUse = true;
+                if (canUse && item.bonus > maxBonus)
+                {
+                    maxBonus = item.bonus;
+                }
             }
         }
         return maxBonus;

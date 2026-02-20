@@ -13,6 +13,9 @@ public class Level
         generateLevel();
     }
 
+    // Пустой конструктор для загрузки (будем заполнять через метод load)
+    public Level() {}
+
     void generateLevel()
     {
         int roomCount = 7 + rand.nextInt(3);
@@ -21,15 +24,15 @@ public class Level
         for (int i = 0; i < roomCount; i++)
         {
             Room room = new Room();
-            int itemCount = rand.nextInt(4);
+            int itemCount = rand.nextInt(5);
             for (int j = 0; j < itemCount; j++)
             {
-                room.addLoot(randomItem());
+                room.addLoot(randomItem(false));
             }
             rooms.add(room);
         }
 
-        int monsterCount = 2 + rand.nextInt(2);
+        int monsterCount = 3 + rand.nextInt(3);
         for (int m = 0; m < monsterCount; m++)
         {
             int roomIndex;
@@ -44,27 +47,104 @@ public class Level
         int exitIndex = rand.nextInt(rooms.size());
         rooms.get(exitIndex).isExit = true;
 
+        int shopIndex;
+        do
+        {
+            shopIndex = rand.nextInt(rooms.size());
+        }
+        while (shopIndex == exitIndex || rooms.get(shopIndex).monster != null);
+        rooms.get(shopIndex).isShop = true;
+
+        // Генерируем ассортимент для магазина (улучшенные предметы)
+        generateShopItems(rooms.get(shopIndex));
+
         generateConnections();
     }
 
-    Item randomItem()
+    // Генерация товаров в магазине (фиксируется при создании уровня)
+    void generateShopItems(Room shopRoom)
+    {
+        // 1 оружие
+        int weaponType = rand.nextInt(3);
+        String weaponName = "";
+        if (weaponType == 0) weaponName = "Меч";
+        else if (weaponType == 1) weaponName = "Лук";
+        else weaponName = "Книга заклинаний";
+        int weaponBonus = 12 + rand.nextInt(6);
+        int weaponPrice = weaponBonus * 6;
+        shopRoom.shopItems.add(new Item(weaponName, ItemType.WEAPON, weaponBonus, weaponPrice));
+
+        // 1 броня
+        int armorBonus = 10 + rand.nextInt(6);
+        int armorPrice = armorBonus * 5;
+        shopRoom.shopItems.add(new Item("Щит", ItemType.ARMOR, armorBonus, armorPrice));
+
+        // 1-3 зелья
+        int potionCount = 1 + rand.nextInt(3);
+        for (int i = 0; i < potionCount; i++)
+        {
+            int potionBonus = 25 + rand.nextInt(16);
+            int potionPrice = potionBonus * 2;
+            shopRoom.shopItems.add(new Item("Зелье здоровья", ItemType.POTION, potionBonus, potionPrice));
+        }
+    }
+
+    Item randomItem(boolean shopItem)
     {
         int type = rand.nextInt(3);
+        String name = "";
+        ItemType itemType = null;
+        int bonus = 0;
+        int price = 0;
+        int baseBonus = shopItem ? 10 : 5;
         switch (type)
         {
-            case 0: return new Item("Меч", ItemType.WEAPON, 5 + rand.nextInt(6));
-            case 1: return new Item("Зелье здоровья", ItemType.POTION, 15 + rand.nextInt(16));
-            default: return new Item("Камень", ItemType.JUNK, 0);
+            case 0:
+                int weaponType = rand.nextInt(3);
+                if (weaponType == 0)
+                {
+                    name = "Меч";
+                    itemType = ItemType.WEAPON;
+                    bonus = baseBonus + rand.nextInt(6);
+                }
+                else if (weaponType == 1)
+                {
+                    name = "Лук";
+                    itemType = ItemType.WEAPON;
+                    bonus = baseBonus + rand.nextInt(6);
+                }
+                else
+                {
+                    name = "Книга заклинаний";
+                    itemType = ItemType.WEAPON;
+                    bonus = baseBonus + rand.nextInt(6);
+                }
+                price = bonus * 5;
+                break;
+            case 1:
+                name = "Щит";
+                itemType = ItemType.ARMOR;
+                bonus = baseBonus + rand.nextInt(4);
+                price = bonus * 4;
+                break;
+            case 2:
+                name = "Зелье здоровья";
+                itemType = ItemType.POTION;
+                bonus = (shopItem ? 25 : 15) + rand.nextInt(11);
+                price = bonus * 2;
+                break;
         }
+        return new Item(name, itemType, bonus, price);
     }
 
     Monster randomMonster()
     {
-        String[] names = {"Гоблин", "Скелет", "Зомби", "Орк"};
+        String[] names = {"Гоблин", "Скелет", "Зомби", "Орк", "Тролль"};
         String name = names[rand.nextInt(names.length)];
-        int hp = 20 + rand.nextInt(31);
-        int damage = 5 + rand.nextInt(11);
-        return new Monster(name, hp, damage);
+        int hp = 30 + rand.nextInt(41);
+        int damage = 10 + rand.nextInt(16);
+        int coinDrop = 10 + rand.nextInt(31);
+        return new Monster(name, hp, damage, coinDrop);
     }
 
     void generateConnections()

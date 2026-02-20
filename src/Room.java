@@ -7,6 +7,8 @@ public class Room
     Monster monster = null;
     ArrayList<Integer> neighbors = new ArrayList<>();
     boolean isExit = false;
+    boolean isShop = false;
+    ArrayList<Item> shopItems = new ArrayList<>(); // товары в магазине (генерируются при создании уровня)
 
     void addLoot(Item item)
     {
@@ -36,6 +38,10 @@ public class Room
             {
                 System.out.println("  " + (i+1) + ". " + loot.get(i));
             }
+        }
+        if (isShop)
+        {
+            System.out.println("Здесь находится торговец! (можно купить предметы)");
         }
         if (isExit)
         {
