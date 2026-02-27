@@ -12,7 +12,6 @@ public class Player
     public Player(ClassType classType)
     {
         this.classType = classType;
-        // Характеристики классов
         switch (classType)
         {
             case MELEE:
@@ -34,7 +33,6 @@ public class Player
         this.currentHp = maxHp;
     }
 
-    // Пустой конструктор для загрузки
     public Player() {}
 
     int getTotalArmor()
@@ -116,14 +114,12 @@ public class Player
         System.out.println("Общий урон: " + getTotalDamage() + " | Общая броня: " + getTotalArmor());
     }
 
-    // Добавить монеты
     void addCoins(int amount)
     {
         coins += amount;
         System.out.println("Вы получили " + amount + " монет. Теперь у вас " + coins + " монет.");
     }
 
-    // Потратить монеты
     boolean spendCoins(int amount)
     {
         if (coins >= amount)

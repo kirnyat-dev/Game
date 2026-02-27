@@ -3,7 +3,7 @@ public class Item
     String name;
     ItemType type;
     int bonus;
-    int price; // цена в магазине (покупка)
+    int price;
 
     public Item(String name, ItemType type, int bonus, int price)
     {

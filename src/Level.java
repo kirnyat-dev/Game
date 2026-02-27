@@ -13,7 +13,6 @@ public class Level
         generateLevel();
     }
 
-    // Пустой конструктор для загрузки (будем заполнять через метод load)
     public Level() {}
 
     void generateLevel()
@@ -55,13 +54,11 @@ public class Level
         while (shopIndex == exitIndex || rooms.get(shopIndex).monster != null);
         rooms.get(shopIndex).isShop = true;
 
-        // Генерируем ассортимент для магазина (улучшенные предметы)
         generateShopItems(rooms.get(shopIndex));
 
         generateConnections();
     }
 
-    // Генерация товаров в магазине (фиксируется при создании уровня)
     void generateShopItems(Room shopRoom)
     {
         // 1 оружие
@@ -74,12 +71,10 @@ public class Level
         int weaponPrice = weaponBonus * 6;
         shopRoom.shopItems.add(new Item(weaponName, ItemType.WEAPON, weaponBonus, weaponPrice));
 
-        // 1 броня
         int armorBonus = 10 + rand.nextInt(6);
         int armorPrice = armorBonus * 5;
         shopRoom.shopItems.add(new Item("Щит", ItemType.ARMOR, armorBonus, armorPrice));
 
-        // 1-3 зелья
         int potionCount = 1 + rand.nextInt(3);
         for (int i = 0; i < potionCount; i++)
         {

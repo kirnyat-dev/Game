@@ -5,12 +5,10 @@ public class SaveManager
 {
     static final String SAVE_FILE = "save.txt";
 
-    // Сохранение игры: игрок, уровень, текущая комната, сам уровень
     public static void save(Player player, Level level, int roomIndex)
     {
         try (PrintWriter out = new PrintWriter(new FileWriter(SAVE_FILE)))
         {
-            // Версия (на будущее)
             out.println("1");
             // Игрок
             out.println(player.classType.name());
